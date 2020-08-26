@@ -1,4 +1,4 @@
-## ## GRAMMAR-CHECKER
+## GRAMMAR-CHECKER
 
 To illustrate the use of the Spring framework, and the development environment for its use through Maven (and NetBeans), the configuration of a text analysis application will be made, which makes use of a grammar verifier that requires a spelling checker. The grammar checker will be injected, at the time of execution, with the spelling checker required (for now, there are two available: English and Spanish).
 
