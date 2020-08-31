@@ -13,14 +13,19 @@ import edu.eci.arsw.cinema.persistence.CinemaPersistenceException;
 import edu.eci.arsw.cinema.persistence.CinemaPersitence;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author cristian
  */
-public class InMemoryCinemaPersistence implements CinemaPersitence{
+@Service("InMemoryCinemaPersistence")
+public class InMemoryCinemaPersistence implements CinemaPersitence {
     
     private final Map<String,Cinema> cinemas=new HashMap<>();
 
@@ -37,13 +42,27 @@ public class InMemoryCinemaPersistence implements CinemaPersitence{
     }    
 
     @Override
-    public void buyTicket(int row, int col, String cinema, String date, String movieName) throws CinemaException {
-        throw new UnsupportedOperationException("Not supported yet."); 
+    public void buyTicket(int row, int col, String cinema, String date, String movieName) throws CinemaPersistenceException, CinemaException {
+			Cinema cin = getCinema(cinema);
+	    	List<CinemaFunction> fun = cin.getFunctions();
+	    	for (int i = 0; i < fun.size(); i++) {
+	    		if (fun.get(i).getMovie().getName() == movieName && fun.get(i).getDate() == date) {
+	    			fun.get(i).buyTicket(row, col);
+	    		}
+	    	}
     }
 
     @Override
-    public List<CinemaFunction> getFunctionsbyCinemaAndDate(String cinema, String date) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+    public List<CinemaFunction> getFunctionsbyCinemaAndDate(String cinema, String date) throws CinemaPersistenceException{
+    	List<CinemaFunction> functionss= new ArrayList<>();	
+		Cinema cin = getCinema(cinema);
+		List<CinemaFunction> func = cin.getFunctions();
+		for (int i = 0; i < func.size(); i++) {
+			if (func.get(i).getDate() == date) {
+				functionss.add(func.get(i));
+			}
+		}
+		return functionss;
     }
 
     @Override
@@ -59,6 +78,13 @@ public class InMemoryCinemaPersistence implements CinemaPersitence{
     @Override
     public Cinema getCinema(String name) throws CinemaPersistenceException {
         return cinemas.get(name);
+    }
+    
+    @Override
+    public Set<Cinema> getAllCinemas() throws CinemaPersistenceException {
+    	
+    	Set<Cinema> list = new HashSet(cinemas.values());
+    	return list;
     }
 
 }

@@ -8,25 +8,27 @@ package edu.eci.arsw.cinema.services;
 import edu.eci.arsw.cinema.model.Cinema;
 import edu.eci.arsw.cinema.model.CinemaFunction;
 import edu.eci.arsw.cinema.persistence.CinemaException;
+import edu.eci.arsw.cinema.persistence.CinemaPersistenceException;
 import edu.eci.arsw.cinema.persistence.CinemaPersitence;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
-/**
- *
- * @author cristian
- */
+@Service
 public class CinemaServices {
+	
     @Autowired
+    @Qualifier("InMemoryCinemaPersistence")
     CinemaPersitence cps=null;
     
-    public void addNewCinema(Cinema c){
-        
+    public void addNewCinema(Cinema c) throws CinemaPersistenceException{
+        cps.saveCinema(c);
     }
     
-    public Set<Cinema> getAllCinemas(){
-        return null;
+    public Set<Cinema> getAllCinemas() throws CinemaPersistenceException{
+        return cps.getAllCinemas();
     }
     
     /**
@@ -34,18 +36,31 @@ public class CinemaServices {
      * @param name cinema's name
      * @return the cinema of the given name created by the given author
      * @throws CinemaException
+     * @throws CinemaPersistenceException 
      */
-    public Cinema getCinemaByName(String name) throws CinemaException{
-        throw new UnsupportedOperationException("Not supported yet."); 
+    public Cinema getCinemaByName(String name) throws CinemaException {
+        try {
+			return cps.getCinema(name);
+		} catch (CinemaPersistenceException e) {
+			throw new CinemaException(e.getMessage(), e);
+		}
     }
     
     
-    public void buyTicket(int row, int col, String cinema, String date, String movieName){
-        throw new UnsupportedOperationException("Not supported yet."); 
+    public void buyTicket(int row, int col, String cinema, String date, String movieName) throws CinemaException {
+        try {
+			cps.buyTicket(row, col, cinema, date, movieName);
+		} catch (CinemaPersistenceException e) {
+			throw new CinemaException(e.getMessage(), e);
+		}
     }
     
-    public List<CinemaFunction> getFunctionsbyCinemaAndDate(String cinema, String date) {
-        throw new UnsupportedOperationException("Not supported yet."); 
+    public List<CinemaFunction> getFunctionsbyCinemaAndDate(String cinema, String date) throws CinemaException {
+    	try {
+			return cps.getFunctionsbyCinemaAndDate(cinema, date);
+		} catch (CinemaPersistenceException e) {
+			throw new CinemaException(e.getMessage(), e);
+		}
     }
 
 
