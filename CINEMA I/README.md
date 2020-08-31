@@ -10,7 +10,7 @@ In this exercise we will build a class model for the logical layer of an applica
 
 	1. Add the dependencies of Spring.
 
-![xml](img/xml.png)
+	![xml](img/xml.png)
 
 	2. Add the Spring configuration.	
 
