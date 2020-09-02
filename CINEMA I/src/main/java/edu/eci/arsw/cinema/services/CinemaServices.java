@@ -5,6 +5,7 @@
  */
 package edu.eci.arsw.cinema.services;
 
+import edu.eci.arsw.cinema.filter.CinemaFilter;
 import edu.eci.arsw.cinema.model.Cinema;
 import edu.eci.arsw.cinema.model.CinemaFunction;
 import edu.eci.arsw.cinema.persistence.CinemaException;
@@ -22,6 +23,10 @@ public class CinemaServices {
     @Autowired
     @Qualifier("InMemoryCinemaPersistence")
     CinemaPersitence cps=null;
+    
+    @Autowired
+    @Qualifier("Filtro Genero")
+    CinemaFilter Filt=null;
     
     public void addNewCinema(Cinema c) throws CinemaPersistenceException{
         cps.saveCinema(c);
@@ -61,6 +66,14 @@ public class CinemaServices {
 		} catch (CinemaPersistenceException e) {
 			throw new CinemaException(e.getMessage(), e);
 		}
+    }
+    
+    public List<CinemaFunction> getFilterFunctions(String cinema, String date, String filtro) throws CinemaException{
+        try{
+            return Filt.filtro(getFunctionsbyCinemaAndDate(cinema,date), filtro);
+        }catch(CinemaException e){
+            throw new CinemaException(e.getMessage());
+        }
     }
 
 
